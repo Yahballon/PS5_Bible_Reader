@@ -1,0 +1,85 @@
+name: Publish verified Bible Reader v0.2.1
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-v0.2.1.yml'
+permissions:
+  contents: write
+jobs:
+  release:
+    name: Promote hardware-tested compiled PS5 release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify this repository contains the intended v0.2.1 source
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('app.json').read_text())
+          assert data['version']=='0.2.1',data['version']
+          assert data['titleId']=='PPSA99793',data['titleId']
+          assert data['releaseTag']=='bible-reader-v0.2.1'
+          assert len(data['neuralLanguage'])==5
+          for f in ['native/main.cpp','native/tts_reader.cpp','native_piper/piper_onnx.cpp','.github/workflows/build.yml']:
+              assert Path(f).is_file(),f
+          print('Verified standalone v0.2.1 native source and five voices')
+          PY
+      - name: Download hardware-tested compiled ZIP from original tagged build
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 5 \
+            --connect-timeout 30 \
+            'https://github.com/Yahballon/tmp_lap/releases/download/bible-reader-v0.2.1/PPSA99793.zip' \
+            -o release/PPSA99793.zip
+          echo 'f2c0a1815850e31f18f8e2c48b5ace1afb76b22fbd57b7dbde996a0da20838ec  release/PPSA99793.zip' | sha256sum --check --status
+          printf '%s  %s\n' 'f2c0a1815850e31f18f8e2c48b5ace1afb76b22fbd57b7dbde996a0da20838ec' 'PPSA99793.zip' > release/SHA256SUMS
+      - name: Validate exact PS5 installation payload and offline voices
+        run: |
+          python3 - <<'PY'
+          import json, zipfile, struct
+          from pathlib import Path
+          f=Path('release/PPSA99793.zip')
+          assert f.stat().st_size==327809697, f.stat().st_size
+          with zipfile.ZipFile(f) as z:
+              assert z.testzip() is None, 'Bad ZIP member'
+              root='PPSA99793/'
+              meta=json.loads(z.read(root+'sce_sys/param.json'))
+              assert meta['titleId']=='PPSA99793'
+              assert meta['contentVersion']=='01.000.012'
+              assert struct.unpack('<I',z.read(root+'eboot.bin')[:4])[0]==0x1d3d154f
+              for lang in ('en','de','fr','es','ru'):
+                  bible=z.read(root+'assets/bible/'+('webpb' if lang=='en' else lang)+'.tsv')
+                  assert bible.count(b'\n')>30000,lang
+                  assert len(z.read(root+'assets/tts/espeak-ng-data/'+lang+'_dict'))>512,lang
+              for lang,filename in [
+                  ('en','en_US-kristin-medium'),('de','de_DE-thorsten-medium'),
+                  ('fr','fr_FR-siwis-medium'),('es','es_ES-davefx-medium'),
+                  ('ru','ru_RU-denis-medium')]:
+                  model=z.getinfo(root+'assets/tts/neural/'+lang+'/'+filename+'.onnx')
+                  assert model.file_size>50_000_000,lang
+              for p in ('sce_sys/icon0.png','assets/licenses/NEURAL_VOICE_CREDITS.txt','assets/licenses/ONNXRuntime-MIT.txt'):
+                  assert root+p in z.namelist(),p
+          print('Full v0.2.1 package verified, SHA256 checked, five offline models present')
+          PY
+      - name: Publish GitHub release and checksum
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag=bible-reader-v0.2.1
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release view "$tag" --json assets --jq '.assets[].name' | grep -Fx 'PPSA99793.zip'
+            echo "Existing compiled release kept unchanged"
+            exit 0
+          fi
+          gh release create "$tag" \
+            release/PPSA99793.zip release/SHA256SUMS \
+            --target "$GITHUB_SHA" \
+            --title 'Bible Reader v0.2.1 — Offline Native Piper TTS' \
+            --notes-file RELEASE_NOTES.md
+          gh release view "$tag" --json assets --jq '.assets[].name' | grep -Fx 'PPSA99793.zip'

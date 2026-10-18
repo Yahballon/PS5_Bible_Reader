@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="t d">
+<title id="t">Bible Reader by YAHBALLON</title>
+<desc id="d">Dark blue and gold Bible Reader artwork with an open book, reading lines, and neural audio waveform.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1226"/><stop offset=".55" stop-color="#152543"/><stop offset="1" stop-color="#0b152c"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#e9c987"/><stop offset="1" stop-color="#b98743"/></linearGradient>
+<radialGradient id="glow"><stop stop-color="#e8b866" stop-opacity=".19"/><stop offset="1" stop-color="#e8b866" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1280" height="420" rx="24" fill="url(#bg)"/>
+<circle cx="1013" cy="210" r="345" fill="url(#glow)"/>
+<g fill="none" stroke="#bd9563" stroke-opacity=".14">
+<path d="M0 76H1280M0 344H1280"/><path d="M698 0V420M1176 0V420"/>
+</g>
+<g transform="translate(830 68)" fill="none" stroke-linejoin="round">
+<path d="M0 82Q94 35 186 79Q280 31 376 82V277Q273 233 186 281Q100 235 0 276Z" stroke="#e7c489" stroke-width="7"/>
+<path d="M186 79V281" stroke="#e7c489" stroke-width="5"/>
+<g stroke="#7792bd" stroke-opacity=".7" stroke-width="4" stroke-linecap="round">
+<path d="M30 114Q90 89 155 120M30 143Q90 120 155 151M30 172Q90 148 155 178M30 201Q90 178 155 207"/>
+<path d="M217 120Q280 89 345 114M217 151Q280 120 345 143M217 178Q280 148 345 172M217 207Q280 178 345 201"/>
+</g>
+<path d="M38 30V8M63 44V0M88 51V20M113 37V4M138 46V16M163 27V8" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+<path d="M227 27V8M252 46V16M277 37V4M302 51V20M327 44V0M352 30V8" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+</g>
+<g font-family="DejaVu Sans, sans-serif">
+<text x="74" y="108" font-size="18" letter-spacing="5" fill="#bfcfe8">OFFLINE • NATIVE PS5 HOMEBREW</text>
+<text x="70" y="203" font-size="76" font-weight="bold" fill="#faf6ef">BIBLE</text>
+<text x="70" y="287" font-size="76" font-weight="bold" fill="url(#gold)">READER</text>
+<rect x="73" y="315" width="505" height="2" fill="url(#gold)" opacity=".75"/>
+<text x="74" y="355" font-size="20" letter-spacing="2" fill="#e5d4b5">BY YAHBALLON <tspan fill="#8ca5c7">/ v0.2.1</tspan></text>
+</g>
+</svg>
