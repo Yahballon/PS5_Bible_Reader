@@ -19,7 +19,9 @@
 </div>
 
 ---
-
+<p align="center">
+  <img src="screenshots/1.png" alt="PS5NES game shelf">
+</p>
 ## About
 
 Bible Reader is a **native C++ homebrew application** for compatible PS5 jailbreak/homebrew environments. It contains the complete 66-book Bible in **five languages** and supports comfortable reading, search, bookmarks, daily verses, and natural **Piper neural text-to-speech computed locally on the console**. After installation, reading and speech **do not require internet access**.
