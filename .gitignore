@@ -1,0 +1,20 @@
+# Builds and toolchain caches
+app/
+build/
+dist/
+.deps/
+*.o
+*.a
+*.elf
+*.bin
+*.prx
+*.zip
+*.onnx
+*.onnx.json
+*.pcm
+*.wav
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
